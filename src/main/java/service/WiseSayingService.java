@@ -9,6 +9,7 @@ import java.io.*;
 public class WiseSayingService {
     private static final WiseSayingRepository repository = new WiseSayingRepository();
 
+    // 번호에 맞는 명언 불러오기
     public WiseSayingDto findOne(int no) {
         if (repository.check(no)) {
             return new WiseSayingDto(repository.findById(no));
@@ -19,9 +20,9 @@ public class WiseSayingService {
     }
 
     // 명언 추가
-    public void add(String message, String author) {
+    public void add(String content, String author) {
         try {
-            int id = repository.add(message, author);
+            int id = repository.add(content, author);
             System.out.println(id + "번 명언이 등록되었습니다.");
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -39,9 +40,9 @@ public class WiseSayingService {
     }
 
     // 명언 수정
-    public void edit(int no, String message, String author) {
-        try{
-            repository.edit(no, message, author);
+    public void edit(int no, String content, String author) {
+        try {
+            repository.edit(no, content, author);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -52,7 +53,7 @@ public class WiseSayingService {
         System.out.println("번호 / 작가 / 명언");
         System.out.println("----------------------");
         for (WiseSaying ws : repository.getList()) {
-            System.out.println(ws.getNo() + " / " + ws.getMessage() + " / " + ws.getAuthor());
+            System.out.println(ws.getNo() + " / " + ws.getAuthor() + " / " + ws.getContent());
         }
     }
 
@@ -79,6 +80,7 @@ public class WiseSayingService {
     public void programEnd() {
         try {
             repository.saveLastId();
+            repository.fileBuild();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

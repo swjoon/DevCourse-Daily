@@ -4,11 +4,11 @@ import entity.WiseSaying;
 
 public class WiseSayingDto {
 
-    private final String message;
+    private final String content;
     private final String author;
 
-    public String getMessage() {
-        return message;
+    public String getContent() {
+        return content;
     }
 
     public String getAuthor() {
@@ -16,7 +16,7 @@ public class WiseSayingDto {
     }
 
     public WiseSayingDto(WiseSaying entity) {
-        this.message = entity.getMessage();
+        this.content = entity.getContent();
         this.author = entity.getAuthor();
     }
 }

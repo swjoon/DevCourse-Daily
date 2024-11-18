@@ -6,7 +6,7 @@ import util.InputUtils;
 public class WiseSayingHandler {
     private static final WiseSayingController controller = new WiseSayingController();
 
-    public static void start(){
+    public void start() {
 
         controller.start();
 
@@ -20,7 +20,6 @@ public class WiseSayingHandler {
                 case "목록" -> controller.print();
                 case "빌드" -> controller.build();
                 default -> {
-                    controller.build();
                     controller.end();
                     return;
                 }
