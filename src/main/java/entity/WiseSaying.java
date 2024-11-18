@@ -26,9 +26,4 @@ public class WiseSaying {
         this.content = content;
         this.author = author;
     }
-
-    @Override
-    public String toString() {
-        return no + " / " + author + " / " + content;
-    }
 }
