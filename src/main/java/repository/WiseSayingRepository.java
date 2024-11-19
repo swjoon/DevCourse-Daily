@@ -69,7 +69,7 @@ public class WiseSayingRepository {
 
         File jsonFile = new File(resourcePath, "data.json");
 
-        if (jsonFile.exists() && !(jsonFile.length() == 0)){
+        if (jsonFile.exists() && !(jsonFile.length() == 0)) {
             wiseSayingMap = om.readValue(jsonFile, new TypeReference<Map<Integer, WiseSaying>>() {
             });
         }
