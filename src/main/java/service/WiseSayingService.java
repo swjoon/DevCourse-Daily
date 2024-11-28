@@ -50,35 +50,44 @@ public class WiseSayingService {
 
         // 전체 목록
         if (query == null) {
-            return paging(1, repository.findAll());
+            return paging(1, "list", repository.findAll());
         }
 
         // 일반 검색
         if (query.get("page") == null) {
-            return paging(1, repository.searchList(url));
+            return paging(1, "search", repository.searchList(url));
         }
 
         int page = Integer.parseInt(query.get("page"));
 
         // 전체 목록 + 페이지
         if (query.get("keywordType") == null && query.get("keyword") == null) {
-            return paging(page, repository.findAll());
+            return paging(page, "list", repository.findAll());
         }
 
         // 일반 검색 + 페이지
-        return paging(page, repository.searchList(url));
+        return paging(page, "search", repository.searchList(url));
     }
 
     // 페이지로 변환
-    public Page paging(int page, List<WiseSaying> list) {
+    public Page paging(int page, String type, List<WiseSaying> list) {
         int pageSize = (int) Math.ceil((double) list.size() / 5);
         int startIndex = 5 * (page - 1);
-        if (page < pageSize) {
-            return new Page(page, pageSize, list.subList(startIndex, startIndex + 5));
-        } else if (page == pageSize) {
-            return new Page(page, pageSize, list.subList(startIndex, startIndex + list.size() % 5));
+        int index = list.size() % 5 == 0 ? 5 : list.size() % 5;
+
+        // 잘못된 입력
+        if (page > pageSize) {
+            return null;
         }
-        return null;
+
+        // 마지막 페이지
+        if (page == pageSize) {
+            return new Page(page, pageSize, type, list.subList(startIndex, startIndex + index));
+        }
+
+        // 일반 페이지
+        return new Page(page, pageSize, type, list.subList(startIndex, startIndex + 5));
+
     }
 
     // 빌드

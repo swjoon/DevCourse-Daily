@@ -97,6 +97,7 @@ public class WiseSayingRepositoryImpl implements WiseSayingRepository{
         saveFile(no, updatedWiseSaying);
     }
 
+    // 검색 리스트
     public List<WiseSaying> searchList(Url url){
         if(url.getQuery().get("keywordType").equals("content")) {
             return findAll().stream().filter(w -> w.getContent().contains(url.getQuery().get("keyword"))).toList();

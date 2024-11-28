@@ -48,15 +48,24 @@ public class WiseSayingController {
 
     // 목록 출력
     public void print(Url url) {
-        Page page = service.searchList(url);
-        if(page== null){
-            System.out.println("잘못된 입력입니다.");
-        }else{
+        try {
+            Page page = service.searchList(url);
+            if (page == null) {
+                System.out.println("잘못된 입력입니다.");
+            }
+            if (page.getType().equals("search")) {
+                System.out.println("----------------------");
+                System.out.println("검색타입 : " + url.getQuery().get("keywordType"));
+                System.out.println("검색어 : " + url.getQuery().get("keyword"));
+                System.out.println("----------------------");
+            }
             System.out.println("번호 / 작가 / 명언");
             System.out.println("----------------------");
             page.getPageList().forEach(System.out::println);
             System.out.println("----------------------");
             System.out.println(page.pageNumber());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -66,7 +75,7 @@ public class WiseSayingController {
         System.out.println("data.json 파일의 내용이 갱신되었습니다.");
     }
 
-    // 프로그랢 종료
+    // 프로그램 종료
     public void end() {
         service.programEnd();
     }
