@@ -1,6 +1,6 @@
 package utils;
 
-import entity.Url;
+import entity.dto.Url;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.*;

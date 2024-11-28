@@ -1,12 +1,10 @@
 package repository;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import entity.dto.Url;
 import entity.WiseSaying;
 
 import java.io.*;
 import java.util.List;
-import java.util.TreeMap;
 
 public interface WiseSayingRepository {
     boolean exists(int no);
@@ -21,7 +19,10 @@ public interface WiseSayingRepository {
 
     List<WiseSaying> findAll();
 
+    List<WiseSaying> searchList(Url url);
+
     void fileBuild();
 
     void saveLastId();
+
 }

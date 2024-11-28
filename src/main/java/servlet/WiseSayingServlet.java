@@ -1,7 +1,7 @@
 package servlet;
 
 import controller.WiseSayingController;
-import entity.Url;
+import entity.dto.Url;
 import lombok.RequiredArgsConstructor;
 import utils.InputUtils;
 
@@ -21,9 +21,12 @@ public class WiseSayingServlet {
                 case "수정" -> controller.edit(url);
                 case "목록" -> controller.print(url);
                 case "빌드" -> controller.build();
-                default -> {
+                case "종료" -> {
                     controller.end();
                     return;
+                }
+                default -> {
+                    System.out.println("잘못된 입력입니다.");
                 }
             }
         }

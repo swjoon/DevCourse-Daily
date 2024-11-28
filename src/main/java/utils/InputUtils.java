@@ -1,6 +1,7 @@
 package utils;
 
-import entity.Url;
+import entity.dto.Page;
+import entity.dto.Url;
 
 import java.util.HashMap;
 import java.util.Map;

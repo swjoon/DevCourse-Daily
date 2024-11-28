@@ -2,6 +2,7 @@ package repository;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import entity.dto.Url;
 import entity.WiseSaying;
 
 import java.io.*;
@@ -29,6 +30,7 @@ public class WiseSayingRepositoryImpl implements WiseSayingRepository{
         }
     }
 
+    // 저장된 데이터 불러오기
     private void loadAllData() {
         loadLastId();
         loadWiseSayings();
@@ -60,7 +62,6 @@ public class WiseSayingRepositoryImpl implements WiseSayingRepository{
         }
     }
 
-
     public boolean exists(int no) {
         return wiseSayingMap.containsKey(no);
     }
@@ -73,26 +74,39 @@ public class WiseSayingRepositoryImpl implements WiseSayingRepository{
         return wiseSayingMap.values().stream().toList();
     }
 
+    // 추가
     public int add(String content, String author) {
         int currentId = id++;
         WiseSaying wiseSaying = new WiseSaying(currentId, content, author);
         wiseSayingMap.put(currentId, wiseSaying);
-        saveToFile(currentId, wiseSaying);
+        saveFile(currentId, wiseSaying);
         saveLastId();
         return currentId;
     }
 
+    // 삭제
     public void delete(int no) {
         wiseSayingMap.remove(no);
         deleteFile(no);
     }
 
+    // 수정
     public void edit(int no, String content, String author) throws IOException {
         WiseSaying updatedWiseSaying = new WiseSaying(no, content, author);
         wiseSayingMap.replace(no, updatedWiseSaying);
-        saveToFile(id, updatedWiseSaying);
+        saveFile(no, updatedWiseSaying);
     }
 
+    public List<WiseSaying> searchList(Url url){
+        if(url.getQuery().get("keywordType").equals("content")) {
+            return findAll().stream().filter(w -> w.getContent().contains(url.getQuery().get("keyword"))).toList();
+        } else if(url.getQuery().get("keywordType").equals("author")){
+            return findAll().stream().filter( w-> w.getAuthor().contains(url.getQuery().get("keyword"))).toList();
+        }
+        return null;
+    }
+
+    // 파일 빌드
     public void fileBuild() {
         File jsonFile = new File(RESOURCE_PATH, "data.json");
         try {
@@ -103,7 +117,7 @@ public class WiseSayingRepositoryImpl implements WiseSayingRepository{
     }
 
     // 파일 저장
-    private void saveToFile(int id, WiseSaying wiseSaying) {
+    private void saveFile(int id, WiseSaying wiseSaying) {
         File file = new File(RESOURCE_PATH, id + ".json");
         try {
             om.writeValue(file, wiseSaying);

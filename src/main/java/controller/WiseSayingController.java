@@ -1,6 +1,7 @@
 package controller;
 
-import entity.Url;
+import entity.dto.Page;
+import entity.dto.Url;
 import entity.dto.WiseSayingDto;
 import lombok.RequiredArgsConstructor;
 import service.WiseSayingService;
@@ -47,14 +48,16 @@ public class WiseSayingController {
 
     // 목록 출력
     public void print(Url url) {
-        System.out.println("번호 / 작가 / 명언");
-        System.out.println("----------------------");
-        if (url.getQuery() == null) {
-            service.loadList().forEach(System.out::println);
+        Page page = service.searchList(url);
+        if(page== null){
+            System.out.println("잘못된 입력입니다.");
+        }else{
+            System.out.println("번호 / 작가 / 명언");
+            System.out.println("----------------------");
+            page.getPageList().forEach(System.out::println);
+            System.out.println("----------------------");
+            System.out.println(page.pageNumber());
         }
-        System.out.println("----------------------");
-
-
     }
 
     // 중간 저장 (빌드)
