@@ -1,55 +1,60 @@
 package controller;
 
+import entity.Url;
 import entity.dto.WiseSayingDto;
+import lombok.RequiredArgsConstructor;
 import service.WiseSayingService;
-import util.InputUtils;
+import utils.InputUtils;
 
+import java.util.Map;
+
+@RequiredArgsConstructor
 public class WiseSayingController {
-    private static final WiseSayingService service = new WiseSayingService();
-
-    // 프로그램 시작
-    public void start() {
-        service.programStart();
-    }
+    private final WiseSayingService service;
 
     // 명언 추가
     public void add() {
-        String content = InputUtils.input("명언 : ");
-        String author = InputUtils.input("작가 : ");
-        int id = service.add(content, author);
+        int id = service.add(InputUtils.input("명언 : "), InputUtils.input("작가 : "));
         System.out.println(id + "번 명언이 등록되었습니다.");
     }
 
     // 명언 삭제
-    public void delete() {
-        int no = Integer.parseInt(InputUtils.input("id= "));
-        if (service.delete(no)) {
-            System.out.println(no + "번 명언이 삭제되었습니다.");
-            return;
+    public void delete(Url url) {
+        if (url.getQuery() == null) return;
+        int id = Integer.parseInt(url.getQuery().get("id"));
+        if (service.delete(id)) {
+            System.out.println(id + "번 명언이 삭제되었습니다.");
+        } else {
+            System.out.println(id + "번 명언은 존재하지 않습니다.");
         }
-        System.out.println(no + "번 명언은 존재하지 않습니다.");
     }
 
     // 명언 수정
-    public void edit() {
-        int no = Integer.parseInt(InputUtils.input("id= "));
-        WiseSayingDto dto = service.findOne(no);
-        if (dto == null) {
-            System.out.println(no + "번 명언은 존재하지 않습니다.");
-            return;
+    public void edit(Url url) {
+        if (url.getQuery() == null) return;
+        int id = Integer.parseInt(url.getQuery().get("id"));
+        WiseSayingDto dto = service.findOne(id);
+        if (dto != null) {
+            System.out.println("명언(기존) : " + dto.getContent());
+            String content = InputUtils.input("명언 : ");
+            System.out.println("작가(기존) : " + dto.getAuthor());
+            String author = InputUtils.input("작가 : ");
+            service.edit(id, content, author);
+        } else {
+            System.out.println(id + "번 명언은 존재하지 않습니다.");
         }
-        System.out.println("명언(기존) : " + dto.getContent());
-        String content = InputUtils.input("명언 : ");
-        System.out.println("작가(기존) : " + dto.getAuthor());
-        String author = InputUtils.input("작가 : ");
-        service.edit(no, content, author);
     }
 
     // 목록 출력
-    public void print() {
+    public void print(Url url) {
         System.out.println("번호 / 작가 / 명언");
         System.out.println("----------------------");
-        service.loadList().stream().forEach(System.out::println);
+        if (url.getQuery() == null) {
+            service.loadList().forEach(System.out::println);
+        }
+        System.out.println("----------------------");
+
+
     }
 
     // 중간 저장 (빌드)
